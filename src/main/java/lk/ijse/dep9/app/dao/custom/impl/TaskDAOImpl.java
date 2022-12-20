@@ -111,4 +111,24 @@ public class TaskDAOImpl implements TaskDAO {
     public boolean existsById(Integer id) {
         return findById(id).isPresent();
     }
+
+    @Override
+    public List<Task> findAllTasksByProjectId(Integer projectId) {
+        try {
+            List<Task> taskList = new ArrayList<>();
+            PreparedStatement stm = connection.
+                    prepareStatement("SELECT * FROM Task WHERE project_id = ?");
+            stm.setInt(1, projectId);
+            ResultSet rst = stm.executeQuery();
+            while (rst.next()){
+                taskList.add(new Task(rst.getInt("id"),
+                        rst.getString("content"),
+                        Task.Status.valueOf(rst.getString("status")),
+                        rst.getInt("project_id")));
+            }
+            return taskList;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
