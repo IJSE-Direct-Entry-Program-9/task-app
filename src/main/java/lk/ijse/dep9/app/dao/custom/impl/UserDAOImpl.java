@@ -5,7 +5,6 @@ import lk.ijse.dep9.app.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class UserDAOImpl implements UserDAO {
 
     private final JdbcTemplate jdbc;
 
-    public UserDAOImpl( JdbcTemplate jdbc) {
+    public UserDAOImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -49,8 +48,8 @@ public class UserDAOImpl implements UserDAO {
     public List<User> findAll() {
         return jdbc.query("SELECT * FROM User", (rst, rowNum) ->
                 new User(rst.getString("username"),
-                rst.getString("password"),
-                rst.getString("full_name")));
+                        rst.getString("password"),
+                        rst.getString("full_name")));
     }
 
     @Override
