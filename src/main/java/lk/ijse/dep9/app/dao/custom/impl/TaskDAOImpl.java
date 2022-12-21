@@ -15,11 +15,9 @@ import java.util.Optional;
 @Component
 public class TaskDAOImpl implements TaskDAO {
 
-    private final Connection connection;
     private final JdbcTemplate jdbc;
 
-    public TaskDAOImpl(Connection connection, JdbcTemplate jdbc) {
-        this.connection = connection;
+    public TaskDAOImpl( JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -27,7 +25,7 @@ public class TaskDAOImpl implements TaskDAO {
     public Task save(Task task) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
-            PreparedStatement stm = connection.prepareStatement("INSERT INTO Task (content, status, project_id) VALUES (?, ?, ?)");
+            PreparedStatement stm = con.prepareStatement("INSERT INTO Task (content, status, project_id) VALUES (?, ?, ?)");
             stm.setString(1, task.getContent());
             stm.setString(2, task.getStatus().toString());
             stm.setInt(3, task.getProjectId());
