@@ -5,14 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.context.annotation.RequestScope;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 
 @Configuration
 @EnableTransactionManagement
@@ -27,7 +24,7 @@ public class WebRootConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(DataSource ds){
+    public JdbcTemplate jdbcTemplate(DataSource ds) {
         return new JdbcTemplate(ds);
     }
 
