@@ -3,6 +3,7 @@ package lk.ijse.dep9.app;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jndi.JndiObjectFactoryBean;
@@ -29,6 +30,11 @@ public class WebRootConfig {
     @RequestScope
     public Connection connection(DataSource ds) {
         return DataSourceUtils.getConnection(ds);
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource ds){
+        return new JdbcTemplate(ds);
     }
 
     @Bean
