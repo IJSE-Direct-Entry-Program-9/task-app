@@ -7,19 +7,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class ProjectDAOImpl implements ProjectDAO {
 
-    private final Connection connection;
     private final JdbcTemplate jdbc;
 
-    public ProjectDAOImpl(Connection connection, JdbcTemplate jdbc) {
-        this.connection = connection;
+    public ProjectDAOImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -49,7 +46,7 @@ public class ProjectDAOImpl implements ProjectDAO {
 
     @Override
     public Optional<Project> findById(Integer id) {
-        return jdbc.query("SELECT * FROM Project WHERE id=?", rst-> {
+        return jdbc.query("SELECT * FROM Project WHERE id=?", rst -> {
             return Optional.of(new Project(rst.getInt("id"),
                     rst.getString("name"),
                     rst.getString("username")));
@@ -60,8 +57,8 @@ public class ProjectDAOImpl implements ProjectDAO {
     public List<Project> findAll() {
         return jdbc.query("SELECT * FROM Project", (rst, rowIndex) ->
                 new Project(rst.getInt("id"),
-                rst.getString("name"),
-                rst.getString("username")));
+                        rst.getString("name"),
+                        rst.getString("username")));
     }
 
     @Override
@@ -78,7 +75,7 @@ public class ProjectDAOImpl implements ProjectDAO {
     public List<Project> findAllProjectsByUsername(String username) {
         return jdbc.query("SELECT * FROM Project WHERE username = ?", (rst, rowIndex) ->
                 new Project(rst.getInt("id"),
-                rst.getString("name"),
-                rst.getString("username")), username);
+                        rst.getString("name"),
+                        rst.getString("username")), username);
     }
 }
