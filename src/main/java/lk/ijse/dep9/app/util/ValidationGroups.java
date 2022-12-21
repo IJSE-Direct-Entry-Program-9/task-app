@@ -1,12 +1,14 @@
 package lk.ijse.dep9.app.util;
 
+import javax.validation.groups.Default;
+
 public interface ValidationGroups {
-    interface Create {
+    interface Create extends Default {
     }
 
-    interface Update {
+    interface Update extends Default{
     }
 
-    interface Delete {
+    interface Delete extends Default{
     }
 }
