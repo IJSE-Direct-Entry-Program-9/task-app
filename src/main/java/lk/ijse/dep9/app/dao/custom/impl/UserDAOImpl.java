@@ -17,8 +17,11 @@ import java.util.Optional;
 @Component
 public class UserDAOImpl implements UserDAO {
 
-    @Autowired
-    private Connection connection;
+    private final Connection connection;
+
+    public UserDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public User save(User user) {
