@@ -37,11 +37,11 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Optional<User> findById(String username) {
-        return jdbc.query("SELECT full_name, password FROM User WHERE username=?", rst -> {
-            return Optional.of(new User(username,
+        return Optional.ofNullable(jdbc.query("SELECT full_name, password FROM User WHERE username=?", rst -> {
+            return new User(username,
                     rst.getString("password"),
-                    rst.getString("full_name")));
-        }, username);
+                    rst.getString("full_name"));
+        }, username));
     }
 
     @Override
