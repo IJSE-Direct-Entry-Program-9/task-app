@@ -27,12 +27,6 @@ public class WebRootConfig {
     }
 
     @Bean
-    @RequestScope
-    public Connection connection(DataSource ds) {
-        return DataSourceUtils.getConnection(ds);
-    }
-
-    @Bean
     public JdbcTemplate jdbcTemplate(DataSource ds){
         return new JdbcTemplate(ds);
     }
