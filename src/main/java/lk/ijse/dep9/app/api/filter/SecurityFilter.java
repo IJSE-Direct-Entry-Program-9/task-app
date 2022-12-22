@@ -55,7 +55,7 @@ public class SecurityFilter extends HttpFilter {
             Map<String, Object> errAttributes = new LinkedHashMap<>();
             errAttributes.put("status", HttpStatus.UNAUTHORIZED.value());
             errAttributes.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            errAttributes.put("message", "Invalid login credentials");
+            errAttributes.put("message", "Access denied");
             errAttributes.put("timestamp", new Date().toString());
             ObjectMapper objectMapper = new ObjectMapper();
 
