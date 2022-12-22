@@ -10,9 +10,13 @@ import lk.ijse.dep9.app.exception.AuthenticationException;
 import lk.ijse.dep9.app.service.custom.UserService;
 import lk.ijse.dep9.app.util.Transformer;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -67,5 +71,12 @@ public class UserServiceImpl implements UserService {
             projectDAO.deleteById(project.getId());
         }
         userDAO.deleteById(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDTO user = userDAO.findById(username).map(transformer::toUserDTO).
+                orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 }

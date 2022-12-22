@@ -28,9 +28,4 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         return new String[]{"/"};
     }
 
-    @Override
-    protected Filter[] getServletFilters() {
-        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy("securityFilter");
-        return new Filter[]{filterProxy};
-    }
 }

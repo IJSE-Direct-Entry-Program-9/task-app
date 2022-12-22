@@ -4,6 +4,7 @@ import lk.ijse.dep9.app.dto.UserDTO;
 import lk.ijse.dep9.app.service.custom.UserService;
 import lk.ijse.dep9.app.util.ValidationGroups;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,19 +29,19 @@ public class UserController {
     @PatchMapping(value = "/me", consumes = "application/json")
     public void updateUserAccountDetails(
             @Validated(ValidationGroups.Update.class) @RequestBody UserDTO user,
-            @RequestAttribute String username) {
+            @AuthenticationPrincipal(expression = "username") String username) {
         user.setUsername(username);
         userService.updateUserAccountDetails(user);
     }
 
     @GetMapping(value = "/me", produces = "application/json")
-    public UserDTO getUserAccountDetails(@RequestAttribute String username) {
+    public UserDTO getUserAccountDetails(@AuthenticationPrincipal(expression = "username") String username) {
         return userService.getUserAccountDetails(username);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/me")
-    public void deleteUserAccount(@RequestAttribute String username) {
+    public void deleteUserAccount(@AuthenticationPrincipal(expression = "username") String username) {
         userService.deleteUserAccount(username);
     }
 }
