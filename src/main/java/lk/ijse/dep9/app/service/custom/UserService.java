@@ -13,4 +13,6 @@ public interface UserService extends SuperService {
 
     void updateUserAccountDetails(UserDTO userDTO);
 
+    void deleteUserAccount(String username);
+
 }
