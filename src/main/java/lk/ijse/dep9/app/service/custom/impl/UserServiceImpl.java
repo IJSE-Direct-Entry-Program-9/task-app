@@ -41,4 +41,10 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserAccountDetails(String username) {
         return userDAO.findById(username).map(transformer::toUserDTO).get();
     }
+
+    @Override
+    public void updateUserAccountDetails(UserDTO userDTO) {
+        userDTO.setPassword(DigestUtils.sha256Hex(userDTO.getPassword()));
+        userDAO.update(transformer.toUser(userDTO));
+    }
 }
