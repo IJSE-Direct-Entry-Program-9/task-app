@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class TaskDAOImpl implements TaskDAO {
     public Task save(Task task) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
-            PreparedStatement stm = con.prepareStatement("INSERT INTO Task (content, status, project_id) VALUES (?, ?, ?)");
+            PreparedStatement stm = con.prepareStatement("INSERT INTO Task (content, status, project_id) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, task.getContent());
             stm.setString(2, task.getStatus().toString());
             stm.setInt(3, task.getProjectId());
