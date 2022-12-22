@@ -4,12 +4,9 @@ import lk.ijse.dep9.app.dao.custom.ProjectDAO;
 import lk.ijse.dep9.app.dao.custom.TaskDAO;
 import lk.ijse.dep9.app.dto.ProjectDTO;
 import lk.ijse.dep9.app.dto.TaskDTO;
-import lk.ijse.dep9.app.entity.Project;
 import lk.ijse.dep9.app.entity.Task;
-import lk.ijse.dep9.app.exception.AccessDeniedException;
 import lk.ijse.dep9.app.service.custom.ProjectTaskService;
 import lk.ijse.dep9.app.util.Transformer;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,7 +85,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
     @Override
     public void updateTaskStatus(String username, TaskDTO taskDTO, boolean completed) {
         Task task = taskDAO.findById(taskDTO.getId()).get();
-        task.setStatus(completed? Task.Status.COMPLETED : Task.Status.NOT_COMPLETED);
+        task.setStatus(completed ? Task.Status.COMPLETED : Task.Status.NOT_COMPLETED);
         taskDAO.update(task);
     }
 }

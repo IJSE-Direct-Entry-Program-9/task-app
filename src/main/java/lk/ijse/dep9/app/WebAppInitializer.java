@@ -1,6 +1,5 @@
 package lk.ijse.dep9.app;
 
-import lk.ijse.dep9.app.api.filter.SecurityFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;

@@ -1,6 +1,5 @@
 package lk.ijse.dep9.app.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lk.ijse.dep9.app.util.ValidationGroups;
 import lombok.AllArgsConstructor;
