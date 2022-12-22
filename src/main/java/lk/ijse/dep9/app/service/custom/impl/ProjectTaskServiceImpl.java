@@ -11,7 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +18,9 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectTaskServiceImpl implements ProjectTaskService {
 
-    private ProjectDAO projectDAO;
-    private TaskDAO taskDAO;
-    private Transformer transformer;
+    private final ProjectDAO projectDAO;
+    private final TaskDAO taskDAO;
+    private final Transformer transformer;
 
     public ProjectTaskServiceImpl(ProjectDAO projectDAO, TaskDAO taskDAO, Transformer transformer) {
         this.projectDAO = projectDAO;
@@ -42,10 +41,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
     @Override
     public ProjectDTO getProjectDetails(String username, int projectId) {
-        ProjectDTO project = projectDAO.findById(projectId).
-                map(transformer::toProjectDTO).orElseThrow(() -> new EmptyResultDataAccessException(1));
-        if (!project.getUsername().matches(username)) throw new AccessDeniedException();
-        return project;
+        return projectDAO.findById(projectId).map(transformer::toProjectDTO).get();
     }
 
     @Override
@@ -58,9 +54,6 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
     @Override
     public void deleteProject(String username, int projectId) {
-        Project project = projectDAO.findById(projectId).orElseThrow(
-                () -> new EmptyResultDataAccessException(1));
-        if (!project.getUsername().matches(username)) throw new AccessDeniedException();
         taskDAO.findAllTasksByProjectId(projectId).forEach(task -> taskDAO.deleteById(task.getId()));
         projectDAO.deleteById(projectId);
     }
