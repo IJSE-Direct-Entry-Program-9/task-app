@@ -1,6 +1,7 @@
 package lk.ijse.dep9.app.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lk.ijse.dep9.app.exception.AuthenticationException;
 import lk.ijse.dep9.app.service.custom.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -41,10 +42,14 @@ public class SecurityFilter extends HttpFilter {
                 String username = credentials.split(":")[0];
                 String password = credentials.split(":")[1];
 
-                userService.verifyUser(username, password);
-                req.setAttribute("username", username);
-                chain.doFilter(req, res);
-                return;
+                try {
+                    userService.verifyUser(username, password);
+                    req.setAttribute("username", username);
+                    chain.doFilter(req, res);
+                    return;
+                } catch (AuthenticationException e) {
+                    // Do nothing
+                }
             }
 
             Map<String, Object> errAttributes = new LinkedHashMap<>();
