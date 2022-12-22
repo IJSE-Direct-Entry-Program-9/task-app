@@ -39,6 +39,9 @@ public class Transformer {
     }
 
     public TaskDTO toTaskDTO(Task taskEntity){
+        mapper.typeMap(Task.class, TaskDTO.class)
+                .addMapping(Task::getStatus,TaskDTO::setCompleted);
+        mapper.typeMap(Task.Status.class, Boolean.class).setConverter(pr -> pr.getSource() == Task.Status.COMPLETED);
         return mapper.map(taskEntity, TaskDTO.class);
     }
 }
