@@ -1,7 +1,9 @@
 package lk.ijse.dep9.app.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lk.ijse.dep9.app.service.custom.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,7 +16,14 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Component
 public class SecurityFilter extends HttpFilter {
+
+    private UserService userService;
+
+    public SecurityFilter(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -32,7 +41,10 @@ public class SecurityFilter extends HttpFilter {
                 String username = credentials.split(":")[0];
                 String password = credentials.split(":")[1];
 
-                System.out.println(username + " : " + password);
+                userService.verifyUser(username, password);
+                req.setAttribute("username", username);
+                chain.doFilter(req, res);
+                return;
             }
 
             Map<String, Object> errAttributes = new LinkedHashMap<>();

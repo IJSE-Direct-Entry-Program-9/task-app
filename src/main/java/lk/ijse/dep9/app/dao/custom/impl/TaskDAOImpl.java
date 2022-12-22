@@ -3,12 +3,12 @@ package lk.ijse.dep9.app.dao.custom.impl;
 import lk.ijse.dep9.app.dao.custom.TaskDAO;
 import lk.ijse.dep9.app.entity.Task;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +16,9 @@ import java.util.Optional;
 public class TaskDAOImpl implements TaskDAO {
 
     private final JdbcTemplate jdbc;
+    private final RowMapper<Task> taskRowMapper = (rs, rowNum) -> new Task(rs.getInt("id"), rs.getString("content"), Task.Status.valueOf(rs.getString("status")), rs.getInt("project_id"));
 
-    public TaskDAOImpl( JdbcTemplate jdbc) {
+    public TaskDAOImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
@@ -37,8 +38,7 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public void update(Task task) {
-        jdbc.update("UPDATE Task SET content=?, status=?, project_id=? WHERE id=?",
-                task.getContent(), task.getStatus().toString(), task.getProjectId(), task.getId());
+        jdbc.update("UPDATE Task SET content=?, status=?, project_id=? WHERE id=?", task.getContent(), task.getStatus().toString(), task.getProjectId(), task.getId());
     }
 
     @Override
@@ -48,21 +48,12 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public Optional<Task> findById(Integer id) {
-        return Optional.ofNullable(jdbc.query("SELECT * FROM Task WHERE id=?", rst -> {
-            return new Task(rst.getInt("id"),
-                    rst.getString("content"),
-                    Task.Status.valueOf(rst.getString("status")),
-                    rst.getInt("project_id"));
-        }, id));
+        return jdbc.query("SELECT * FROM Task WHERE id=?", taskRowMapper, id).stream().findFirst();
     }
 
     @Override
     public List<Task> findAll() {
-        return jdbc.query("SELECT * FROM Task", (rst, rowIndex) ->
-                new Task(rst.getInt("id"),
-                rst.getString("content"),
-                Task.Status.valueOf(rst.getString("status")),
-                rst.getInt("project_id")));
+        return jdbc.query("SELECT * FROM Task", taskRowMapper);
     }
 
     @Override
@@ -77,10 +68,6 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public List<Task> findAllTasksByProjectId(Integer projectId) {
-        return jdbc.query("SELECT * FROM Task WHERE project_id = ?", (rst, rowIndex) ->
-                new Task(rst.getInt("id"),
-                rst.getString("content"),
-                Task.Status.valueOf(rst.getString("status")),
-                rst.getInt("project_id")), projectId);
+        return jdbc.query("SELECT * FROM Task WHERE project_id = ?", taskRowMapper, projectId);
     }
 }

@@ -3,6 +3,7 @@ package lk.ijse.dep9.app.dao.custom.impl;
 import lk.ijse.dep9.app.dao.custom.ProjectDAO;
 import lk.ijse.dep9.app.entity.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class ProjectDAOImpl implements ProjectDAO {
 
     private final JdbcTemplate jdbc;
+    private final RowMapper<Project> projectRowMapper = (rs, rowNum) -> new Project(rs.getInt("id"), rs.getString("name"), rs.getString("username"));
 
     public ProjectDAOImpl(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
@@ -35,8 +37,7 @@ public class ProjectDAOImpl implements ProjectDAO {
 
     @Override
     public void update(Project project) {
-        jdbc.update("UPDATE Project SET name=? AND username =? WHERE id=?",
-                project.getName(), project.getUsername(), project.getId());
+        jdbc.update("UPDATE Project SET name=? AND username =? WHERE id=?", project.getName(), project.getUsername(), project.getId());
     }
 
     @Override
@@ -46,19 +47,12 @@ public class ProjectDAOImpl implements ProjectDAO {
 
     @Override
     public Optional<Project> findById(Integer id) {
-        return Optional.ofNullable(jdbc.query("SELECT * FROM Project WHERE id=?", rst -> {
-            return new Project(rst.getInt("id"),
-                    rst.getString("name"),
-                    rst.getString("username"));
-        }, id));
+        return jdbc.query("SELECT * FROM Project WHERE id=?", projectRowMapper, id).stream().findFirst();
     }
 
     @Override
     public List<Project> findAll() {
-        return jdbc.query("SELECT * FROM Project", (rst, rowIndex) ->
-                new Project(rst.getInt("id"),
-                        rst.getString("name"),
-                        rst.getString("username")));
+        return jdbc.query("SELECT * FROM Project", projectRowMapper);
     }
 
     @Override
@@ -73,9 +67,6 @@ public class ProjectDAOImpl implements ProjectDAO {
 
     @Override
     public List<Project> findAllProjectsByUsername(String username) {
-        return jdbc.query("SELECT * FROM Project WHERE username = ?", (rst, rowIndex) ->
-                new Project(rst.getInt("id"),
-                        rst.getString("name"),
-                        rst.getString("username")), username);
+        return jdbc.query("SELECT * FROM Project WHERE username = ?", projectRowMapper, username);
     }
 }
