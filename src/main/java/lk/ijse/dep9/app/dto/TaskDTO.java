@@ -20,7 +20,7 @@ public class TaskDTO implements Serializable {
     @Null(message = "Task id can't be specified")
     private Integer projectId;
     @Null(message = "Task status is ready-only")
-    private boolean isCompleted;
+    private Boolean isCompleted;
 
     public TaskDTO(Integer id, Integer projectId) {
         this.id = id;
