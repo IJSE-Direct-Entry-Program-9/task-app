@@ -19,4 +19,5 @@ public class ProjectDTO implements Serializable {
     @NotBlank(message = "Project name can't be null or empty")
     @Length(min = 3, message = "Project name should be at least 3 characters long")
     private String name;
+    private String username;
 }
