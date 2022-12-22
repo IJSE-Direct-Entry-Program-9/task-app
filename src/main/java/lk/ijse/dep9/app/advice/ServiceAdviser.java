@@ -22,7 +22,7 @@ public class ServiceAdviser {
         this.projectDAO = projectDAO;
     }
 
-    @Pointcut("execution(public * lk.ijse.dep9.app.service.custom.ProjectTaskService.*(..))")
+    @Pointcut("execution(public * lk.ijse.dep9.app.service.custom.ProjectTaskService(..))")
     public void serviceMethodAuthorization(){}
 
     @Before(value = "serviceMethodAuthorization() && args(username,projectId)",
@@ -33,7 +33,7 @@ public class ServiceAdviser {
 
     @Before(value = "serviceMethodAuthorization() && args(project)", argNames = "project")
     public void serviceMethodAuthorization(ProjectDTO project){
-        executeAdvice(project.getUsername(), project.getId());
+        if (project.getId() != null) executeAdvice(project.getUsername(), project.getId());
     }
 
     private void executeAdvice(String username, int projectId){
